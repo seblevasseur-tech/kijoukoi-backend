@@ -36,7 +36,16 @@ public class PlayerController {
         return playerRepository.findById(id).map(player -> {
             player.setRacket(updatedPlayer.getRacket());
             player.setLastRacketUpdateDate(java.time.LocalDateTime.now());
-            // On peut ajouter la mise à jour d'autres champs ici si besoin
+            
+            // Mise à jour des tags
+            player.getTagAssignments().clear();
+            if (updatedPlayer.getTagAssignments() != null) {
+                updatedPlayer.getTagAssignments().forEach(assignment -> {
+                    assignment.setPlayer(player);
+                    player.getTagAssignments().add(assignment);
+                });
+            }
+            
             return ResponseEntity.ok(playerRepository.save(player));
         }).orElse(ResponseEntity.notFound().build());
     }
