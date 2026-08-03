@@ -1,12 +1,7 @@
 -- Script d'initialisation de données Kijoukoi (PostgreSQL)
 
 -- 1. Nettoyage (optionnel si les tables viennent d'être créées)
-DELETE FROM player_tag_assignment;
-DELETE FROM player;
-DELETE FROM blade;
-DELETE FROM rubber;
-DELETE FROM player_tag;
-DELETE FROM brand;
+TRUNCATE TABLE player_tag_assignment, player, blade, rubber, player_tag, brand CASCADE;
 
 -- 2. Insertion des Marques
 INSERT INTO brand (id, name) VALUES (1, 'Butterfly');
