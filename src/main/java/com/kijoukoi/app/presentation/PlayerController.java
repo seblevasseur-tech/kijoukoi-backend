@@ -23,6 +23,19 @@ public class PlayerController {
         return playerRepository.findAll();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Player> getMe(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(401).build();
+        }
+        String username = authentication.getName();
+        return playerRepository.findAll().stream()
+                .filter(p -> p.getLogin().equals(username))
+                .findFirst()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable Long id) {
         return playerRepository.findById(id)
