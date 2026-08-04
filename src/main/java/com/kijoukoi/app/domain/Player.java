@@ -35,8 +35,13 @@ public class Player {
     @Embedded
     private Racket racket;
 
-    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PlayerTagAssignment> tagAssignments = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "player_tags",
+        joinColumns = @JoinColumn(name = "player_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private java.util.Set<PlayerTag> tags = new java.util.HashSet<>();
 
     public Player() {
     }
@@ -77,6 +82,6 @@ public class Player {
     public Racket getRacket() { return racket; }
     public void setRacket(Racket racket) { this.racket = racket; }
 
-    public List<PlayerTagAssignment> getTagAssignments() { return tagAssignments; }
-    public void setTagAssignments(List<PlayerTagAssignment> tagAssignments) { this.tagAssignments = tagAssignments; }
+    public java.util.Set<PlayerTag> getTags() { return tags; }
+    public void setTags(java.util.Set<PlayerTag> tags) { this.tags = tags; }
 }

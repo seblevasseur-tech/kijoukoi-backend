@@ -60,9 +60,9 @@ public class DynamicStatsRepository {
         Path<?> currentPath = root;
         
         for (String part : parts) {
-            // Special case for our ManyToMany/OneToMany collections
+            // Special case for our ManyToMany collection
             if ("tags".equals(part)) {
-                currentFrom = currentFrom.join("tagAssignments", JoinType.LEFT).join("tag", JoinType.LEFT);
+                currentFrom = currentFrom.join("tags", JoinType.LEFT);
                 currentPath = currentFrom;
             } else {
                 currentPath = currentPath.get(part);
