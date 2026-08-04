@@ -56,9 +56,17 @@ public class DynamicStatsRepository {
     @SuppressWarnings("unchecked")
     private <T> Path<T> resolvePath(Root<Player> root, String field) {
         String[] parts = field.split("\\.");
+        From<?, ?> currentFrom = root;
         Path<?> currentPath = root;
+        
         for (String part : parts) {
-            currentPath = currentPath.get(part);
+            // Special case for our ManyToMany/OneToMany collections
+            if ("tags".equals(part)) {
+                currentFrom = currentFrom.join(part, JoinType.LEFT);
+                currentPath = currentFrom;
+            } else {
+                currentPath = currentPath.get(part);
+            }
         }
         return (Path<T>) currentPath;
     }
