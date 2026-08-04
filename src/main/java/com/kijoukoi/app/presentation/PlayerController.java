@@ -51,12 +51,9 @@ public class PlayerController {
             player.setLastRacketUpdateDate(java.time.LocalDateTime.now());
             
             // Mise à jour des tags
-            player.getTagAssignments().clear();
-            if (updatedPlayer.getTagAssignments() != null) {
-                updatedPlayer.getTagAssignments().forEach(assignment -> {
-                    assignment.setPlayer(player);
-                    player.getTagAssignments().add(assignment);
-                });
+            player.getTags().clear();
+            if (updatedPlayer.getTags() != null) {
+                player.getTags().addAll(updatedPlayer.getTags());
             }
             
             return ResponseEntity.ok(playerRepository.save(player));
