@@ -53,4 +53,26 @@ public class AuthController {
             return ResponseEntity.status(401).body("Erreur : Identifiants incorrects");
         }
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody LoginRequest loginRequest) {
+        if (loginRequest.login == null || loginRequest.login.isEmpty() || loginRequest.password == null || loginRequest.password.isEmpty()) {
+            return ResponseEntity.badRequest().body("Erreur : Login et mot de passe obligatoires");
+        }
+        
+        boolean exists = playerRepository.findAll().stream()
+                .anyMatch(p -> p.getLogin().equals(loginRequest.login));
+                
+        if (exists) {
+            return ResponseEntity.badRequest().body("Erreur : Ce login existe déjà");
+        }
+
+        Player player = new Player();
+        player.setLogin(loginRequest.login);
+        player.setPassword(loginRequest.password);
+        playerRepository.save(player);
+
+        String jwt = jwtUtils.generateJwtToken(player.getLogin());
+        return ResponseEntity.ok(new JwtResponse(jwt, player.getId(), player.getLogin()));
+    }
 }
