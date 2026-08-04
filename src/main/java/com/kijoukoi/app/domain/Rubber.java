@@ -21,6 +21,8 @@ public class Rubber {
     @JoinColumn(name = "type_id")
     private RubberType type;
 
+    private Double hardness;
+
     @Column(columnDefinition = "TEXT")
     private String image;
 
@@ -45,6 +47,9 @@ public class Rubber {
 
     public RubberType getType() { return type; }
     public void setType(RubberType type) { this.type = type; }
+
+    public Double getHardness() { return hardness; }
+    public void setHardness(Double hardness) { this.hardness = hardness; }
 
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
