@@ -103,17 +103,17 @@ INSERT INTO player (id, login, password, age, nationality, ranking, registration
 (10, 'felix.lebrun', 'penhold', 17, 'FR', 2950, CURRENT_TIMESTAMP, 1, 5, 5);
 
 -- 7. Insertion de la relation Player <-> PlayerTag (mapping)
-INSERT INTO player_tag_assignment (player_id, tag_id, is_positive) VALUES
-(1, 1, true), (1, 6, false),
-(2, 2, true), (2, 5, true),
-(3, 3, true), (3, 4, false),
-(4, 4, true), (4, 1, false),
-(5, 5, true), (5, 6, true),
-(6, 2, true), (6, 3, false),
-(7, 1, true),
-(8, 6, true), (8, 2, false),
-(9, 1, true), (9, 5, true),
-(10, 5, true), (10, 6, true);
+INSERT INTO player_tags (player_id, tag_id) VALUES
+(1, 1), (1, 3), (1, 5),
+(2, 2), (2, 4),
+(3, 1), (3, 2), (3, 6),
+(4, 3), (4, 5), (4, 6),
+(5, 1), (5, 4), (5, 5), (5, 6),
+(6, 2), (6, 3),
+(7, 1), (7, 4), (7, 5),
+(8, 2), (8, 6),
+(9, 3), (9, 4), (9, 5), (9, 6),
+(10, 1), (10, 2);
 
 -- Ajustement des séquences (Important pour PostgreSQL si on insère des ID manuellement)
 SELECT setval('brand_id_seq', (SELECT MAX(id) FROM brand));
