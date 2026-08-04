@@ -24,6 +24,7 @@ public class AuthController {
     public static class LoginRequest {
         public String login;
         public String password;
+        public String gender;
     }
 
     public static class JwtResponse {
@@ -70,6 +71,11 @@ public class AuthController {
         Player player = new Player();
         player.setLogin(loginRequest.login);
         player.setPassword(loginRequest.password);
+        if (loginRequest.gender != null && !loginRequest.gender.isEmpty()) {
+            player.setGender(loginRequest.gender);
+        } else {
+            player.setGender("M"); // Default
+        }
         playerRepository.save(player);
 
         String jwt = jwtUtils.generateJwtToken(player.getLogin());

@@ -90,7 +90,7 @@ INSERT INTO player_tag (id, name) VALUES
 (6, 'rotation revers');
 
 -- 6. Insertion de 10 Players
-INSERT INTO player (id, login, password, age, nationality, ranking, registration_date, blade_id, forehand_rubber_id, backhand_rubber_id) VALUES
+INSERT INTO player (id, login, password, age, gender, nationality, ranking, registration_date, blade_id, forehand_rubber_id, backhand_rubber_id) VALUES
 (1, 'sebastien.pong', 'pass123', 25, 'FR', 1800, CURRENT_TIMESTAMP, 1, 1, 3),
 (2, 'ma.long', 'dragon', 34, 'CN', 3500, CURRENT_TIMESTAMP, 1, 5, 1),
 (3, 'timo.boll', 'legend', 42, 'DE', 3100, CURRENT_TIMESTAMP, 2, 1, 1),
@@ -100,7 +100,7 @@ INSERT INTO player (id, login, password, age, nationality, ranking, registration
 (7, 'hugo.calderano', 'brazil', 28, 'BR', 3200, CURRENT_TIMESTAMP, 15, 19, 19),
 (8, 'lin.yunju', 'backhand', 22, 'TW', 3150, CURRENT_TIMESTAMP, 3, 5, 6),
 (9, 'alexis.lebrun', 'fast', 20, 'FR', 2900, CURRENT_TIMESTAMP, 1, 1, 1),
-(10, 'felix.lebrun', 'penhold', 17, 'FR', 2950, CURRENT_TIMESTAMP, 1, 5, 5);
+(10, 'felix.lebrun', 'penhold', 17, 'M', 'FR', 2950, CURRENT_TIMESTAMP, 1, 5, 5);
 
 -- 7. Insertion de la relation Player <-> PlayerTag (mapping)
 INSERT INTO player_tags (player_id, tag_id) VALUES

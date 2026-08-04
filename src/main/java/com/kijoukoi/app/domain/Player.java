@@ -27,6 +27,8 @@ public class Player {
 
     private LocalDateTime registrationDate;
 
+    private String gender;
+
     private LocalDateTime lastRacketUpdateDate;
 
     @Column(columnDefinition = "TEXT")
@@ -72,6 +74,9 @@ public class Player {
 
     public LocalDateTime getRegistrationDate() { return registrationDate; }
     public void setRegistrationDate(LocalDateTime registrationDate) { this.registrationDate = registrationDate; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 
     public LocalDateTime getLastRacketUpdateDate() { return lastRacketUpdateDate; }
     public void setLastRacketUpdateDate(LocalDateTime lastRacketUpdateDate) { this.lastRacketUpdateDate = lastRacketUpdateDate; }
