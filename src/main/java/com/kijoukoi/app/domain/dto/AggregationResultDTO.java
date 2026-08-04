@@ -6,8 +6,18 @@ public class AggregationResultDTO {
 
     public AggregationResultDTO() {}
 
-    public AggregationResultDTO(String label, Number value) {
+    public AggregationResultDTO(String label, Long value) {
         this.label = label;
+        this.value = value;
+    }
+
+    public AggregationResultDTO(Integer label, Long value) {
+        this.label = label != null ? String.valueOf(label) : null;
+        this.value = value;
+    }
+
+    public AggregationResultDTO(Double label, Long value) {
+        this.label = label != null ? String.valueOf(label) : null;
         this.value = value;
     }
 
