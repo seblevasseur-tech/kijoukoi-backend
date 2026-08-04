@@ -91,6 +91,20 @@ public class DynamicStatsRepository {
                 return cb.lessThanOrEqualTo(path, value.toString());
             case "LIKE":
                 return cb.like(path, "%" + value + "%");
+            case "IN":
+                CriteriaBuilder.In<Object> inClause = cb.in(path);
+                if (value instanceof Iterable) {
+                    for (Object val : (Iterable<?>) value) {
+                        inClause.value(val);
+                    }
+                } else if (value instanceof Object[]) {
+                    for (Object val : (Object[]) value) {
+                        inClause.value(val);
+                    }
+                } else {
+                    inClause.value(value);
+                }
+                return inClause;
             default:
                 throw new IllegalArgumentException("Unsupported operator: " + op);
         }
