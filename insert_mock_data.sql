@@ -1,15 +1,14 @@
--- 0. Insert Blade Types
+-- Script d'initialisation de données Kijoukoi (PostgreSQL)
+
+-- 1. Nettoyage pour idempotence
+TRUNCATE TABLE player_tags, player, blade, rubber, player_tag, brand, blade_type, rubber_type CASCADE;
+
+-- 2. Insert Types
 INSERT INTO blade_type (id, name) VALUES
 (1, 'ALL'), (2, 'ALL+'), (3, 'OFF-'), (4, 'OFF'), (5, 'OFF+'), (6, 'DEF');
 
--- 0. Insert Rubber Types
 INSERT INTO rubber_type (id, name) VALUES
 (1, 'Backside'), (2, 'Soft'), (3, 'Picot mi-long'), (4, 'Picot long'), (5, 'Anti-top');
-
--- Script d'initialisation de données Kijoukoi (PostgreSQL)
-
--- 1. Nettoyage (optionnel si les tables viennent d'être créées)
-TRUNCATE TABLE player_tag_assignment, player, blade, rubber, player_tag, brand CASCADE;
 
 -- 2. Insertion des Marques
 INSERT INTO brand (id, name) VALUES (1, 'Butterfly');
