@@ -17,6 +17,10 @@ public class Rubber {
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id")
+    private RubberType type;
+
     @Column(columnDefinition = "TEXT")
     private String image;
 
@@ -38,6 +42,9 @@ public class Rubber {
 
     public Brand getBrand() { return brand; }
     public void setBrand(Brand brand) { this.brand = brand; }
+
+    public RubberType getType() { return type; }
+    public void setType(RubberType type) { this.type = type; }
 
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }

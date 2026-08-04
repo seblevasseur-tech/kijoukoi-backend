@@ -19,6 +19,10 @@ public class Blade {
 
     private Integer weight;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id")
+    private BladeType type;
+
     @Column(columnDefinition = "TEXT")
     private String image;
 
@@ -44,6 +48,9 @@ public class Blade {
 
     public Integer getWeight() { return weight; }
     public void setWeight(Integer weight) { this.weight = weight; }
+
+    public BladeType getType() { return type; }
+    public void setType(BladeType type) { this.type = type; }
 
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
