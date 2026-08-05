@@ -62,11 +62,11 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}/avatar")
-    public ResponseEntity<byte[]> getPlayerAvatar(@PathVariable Long id) {
+    public ResponseEntity<?> getPlayerAvatar(@PathVariable Long id) {
         return playerRepository.findById(id).map(player -> {
             String dataUri = player.getAvatar();
             if (dataUri == null || dataUri.isEmpty()) {
-                return ResponseEntity.notFound().build();
+                return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
             }
             try {
                 String[] parts = dataUri.split(",");
@@ -77,8 +77,8 @@ public class PlayerController {
                 headers.setContentType(MediaType.IMAGE_JPEG);
                 return new ResponseEntity<>(imageBytes, headers, org.springframework.http.HttpStatus.OK);
             } catch (Exception e) {
-                return ResponseEntity.notFound().build();
+                return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
             }
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND));
     }
 }

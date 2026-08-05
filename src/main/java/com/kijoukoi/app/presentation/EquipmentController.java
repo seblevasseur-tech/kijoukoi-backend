@@ -67,9 +67,9 @@ public class EquipmentController {
         return rubberTypeRepository.findAll();
     }
 
-    private ResponseEntity<byte[]> parseAndReturnImage(String dataUri) {
+    private ResponseEntity<?> parseAndReturnImage(String dataUri) {
         if (dataUri == null || dataUri.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
         }
         try {
             String[] parts = dataUri.split(",");
@@ -80,25 +80,25 @@ public class EquipmentController {
             headers.setContentType(MediaType.IMAGE_JPEG);
             return new ResponseEntity<>(imageBytes, headers, org.springframework.http.HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/blades/{id}/image")
-    public ResponseEntity<byte[]> getBladeImage(@PathVariable Long id) {
+    public ResponseEntity<?> getBladeImage(@PathVariable Long id) {
         Optional<Blade> blade = bladeRepository.findById(id);
         if (blade.isPresent() && blade.get().getImage() != null) {
             return parseAndReturnImage(blade.get().getImage());
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/rubbers/{id}/image")
-    public ResponseEntity<byte[]> getRubberImage(@PathVariable Long id) {
+    public ResponseEntity<?> getRubberImage(@PathVariable Long id) {
         Optional<Rubber> rubber = rubberRepository.findById(id);
         if (rubber.isPresent() && rubber.get().getImage() != null) {
             return parseAndReturnImage(rubber.get().getImage());
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
     }
 }
