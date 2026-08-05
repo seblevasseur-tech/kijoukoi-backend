@@ -26,7 +26,6 @@ public class EquipmentController {
         this.equipmentService = equipmentService;
     }
 
-    @GetMapping("/blades")
     @PostMapping("/blades/search")
     public List<Blade> searchBlades(@RequestBody List<FilterDTO> filters) {
         return equipmentService.searchBlades(filters);
@@ -37,7 +36,6 @@ public class EquipmentController {
         return equipmentService.getAllBlades();
     }
 
-    @GetMapping("/rubbers")
     @PostMapping("/rubbers/search")
     public List<Rubber> searchRubbers(@RequestBody List<FilterDTO> filters) {
         return equipmentService.searchRubbers(filters);
