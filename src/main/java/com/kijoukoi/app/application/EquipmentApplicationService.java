@@ -10,6 +10,8 @@ import com.kijoukoi.app.infrastructure.BladeTypeRepository;
 import com.kijoukoi.app.infrastructure.BrandRepository;
 import com.kijoukoi.app.infrastructure.RubberRepository;
 import com.kijoukoi.app.infrastructure.RubberTypeRepository;
+import com.kijoukoi.app.infrastructure.DynamicEquipmentRepository;
+import com.kijoukoi.app.domain.dto.FilterDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +27,28 @@ public class EquipmentApplicationService {
     private final BrandRepository brandRepository;
     private final BladeTypeRepository bladeTypeRepository;
     private final RubberTypeRepository rubberTypeRepository;
+    private final DynamicEquipmentRepository dynamicEquipmentRepository;
 
     public EquipmentApplicationService(BladeRepository bladeRepository,
                                        RubberRepository rubberRepository,
                                        BrandRepository brandRepository,
                                        BladeTypeRepository bladeTypeRepository,
-                                       RubberTypeRepository rubberTypeRepository) {
+                                       RubberTypeRepository rubberTypeRepository,
+                                       DynamicEquipmentRepository dynamicEquipmentRepository) {
         this.bladeRepository = bladeRepository;
         this.rubberRepository = rubberRepository;
         this.brandRepository = brandRepository;
         this.bladeTypeRepository = bladeTypeRepository;
         this.rubberTypeRepository = rubberTypeRepository;
+        this.dynamicEquipmentRepository = dynamicEquipmentRepository;
+    }
+
+    public List<Blade> searchBlades(List<FilterDTO> filters) {
+        return dynamicEquipmentRepository.searchBlades(filters);
+    }
+
+    public List<Rubber> searchRubbers(List<FilterDTO> filters) {
+        return dynamicEquipmentRepository.searchRubbers(filters);
     }
 
     public List<Blade> getAllBlades() {

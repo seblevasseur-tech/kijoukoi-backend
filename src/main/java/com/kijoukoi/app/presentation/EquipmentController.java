@@ -6,6 +6,7 @@ import com.kijoukoi.app.domain.BladeType;
 import com.kijoukoi.app.domain.Brand;
 import com.kijoukoi.app.domain.Rubber;
 import com.kijoukoi.app.domain.RubberType;
+import com.kijoukoi.app.domain.dto.FilterDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,8 +27,20 @@ public class EquipmentController {
     }
 
     @GetMapping("/blades")
+    @PostMapping("/blades/search")
+    public List<Blade> searchBlades(@RequestBody List<FilterDTO> filters) {
+        return equipmentService.searchBlades(filters);
+    }
+
+    @GetMapping("/blades")
     public List<Blade> getAllBlades() {
         return equipmentService.getAllBlades();
+    }
+
+    @GetMapping("/rubbers")
+    @PostMapping("/rubbers/search")
+    public List<Rubber> searchRubbers(@RequestBody List<FilterDTO> filters) {
+        return equipmentService.searchRubbers(filters);
     }
 
     @GetMapping("/rubbers")
