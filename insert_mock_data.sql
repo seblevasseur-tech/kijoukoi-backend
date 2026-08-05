@@ -1,7 +1,7 @@
 -- Script d'initialisation de données Kijoukoi (PostgreSQL)
 
 -- 1. Nettoyage pour idempotence
-TRUNCATE TABLE player_tags, player, blade, rubber, player_tag, brand, blade_type, rubber_type CASCADE;
+TRUNCATE TABLE player_tags, player, blade, rubber, player_tag, brand, blade_type, rubber_type, image CASCADE;
 
 -- 2. Insert Types
 
@@ -80,26 +80,26 @@ INSERT INTO brand (id, name) VALUES (8, 'Cornilleau');
 
 -- 3. Insertion de 20 Bois
 INSERT INTO blade (id, name, brand_id, weight, type_id, image_id) VALUES
-(1, 'Viscaria ALC', 1, 2, 6, 2),
-(2, 'Timo Boll ALC', 1, 2, 3, 3),
-(3, 'Zhang Jike Original Carbon', 3, 2, 1, 4),
-(4, 'Innerforce Layer ALC', 1, 1, 6, 5),
-(5, 'Ovtcharov Innerforce ALC', 1, 2, 1, 6),
-(6, 'Samsonov Force Pro Black Edition', 2, 2, 6, 7),
-(7, 'Stratus Power Wood', 2, 3, 5, 8),
-(8, 'Lebesson', 2, 2, 4, 9),
-(9, 'Waldner Senso Carbon', 3, 1, 6, 10),
-(10, 'Ovtcharov True Carbon', 3, 1, 3, 11),
-(11, 'Appelgren Allplay', 3, 2, 3, 12),
-(12, 'Clipper Wood', 4, 1, 2, 13),
-(13, 'Infinity VPS V', 4, 1, 5, 14),
-(14, 'Carbonado 145', 4, 3, 3, 15),
-(15, 'Energon Super PBO-c', 5, 3, 5, 16),
-(16, 'Vyzaryz Trinity', 5, 3, 2, 17),
-(17, 'Stradivarius', 6, 1, 4, 18),
-(18, 'Ice Cream AZXi', 6, 1, 6, 19),
-(19, 'Ma Lin Extra Offensive', 7, 1, 1, 20),
-(20, 'Gatien Absolut', 8, 3, 6, 21);
+(1, 'Viscaria ALC', 1, 82, 6, 2),
+(2, 'Timo Boll ALC', 1, 86, 3, 3),
+(3, 'Zhang Jike Original Carbon', 3, 88, 1, 4),
+(4, 'Innerforce Layer ALC', 1, 85, 6, 5),
+(5, 'Ovtcharov Innerforce ALC', 1, 87, 1, 6),
+(6, 'Samsonov Force Pro Black Edition', 2, 90, 6, 7),
+(7, 'Stratus Power Wood', 2, 89, 5, 8),
+(8, 'Lebesson', 2, 90, 4, 9),
+(9, 'Waldner Senso Carbon', 3, 88, 6, 10),
+(10, 'Ovtcharov True Carbon', 3, 84, 3, 11),
+(11, 'Appelgren Allplay', 3, 88, 3, 12),
+(12, 'Clipper Wood', 4, 85, 2, 13),
+(13, 'Infinity VPS V', 4, 80, 5, 14),
+(14, 'Carbonado 145', 4, 83, 3, 15),
+(15, 'Energon Super PBO-c', 5, 89, 5, 16),
+(16, 'Vyzaryz Trinity', 5, 83, 2, 17),
+(17, 'Stradivarius', 6, 83, 4, 18),
+(18, 'Ice Cream AZXi', 6, 80, 6, 19),
+(19, 'Ma Lin Extra Offensive', 7, 84, 1, 20),
+(20, 'Gatien Absolut', 8, 83, 6, 21);
 
 -- 4. Insertion de 30 Revêtements
 INSERT INTO rubber (id, name, brand_id, type_id, hardness, image_id) VALUES
