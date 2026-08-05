@@ -19,7 +19,7 @@ public class Rubber {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id")
-    private RubberType type;
+    private RubberType rubberType;
 
     private Double hardness;
 
@@ -45,8 +45,8 @@ public class Rubber {
     public Brand getBrand() { return brand; }
     public void setBrand(Brand brand) { this.brand = brand; }
 
-    public RubberType getType() { return type; }
-    public void setType(RubberType type) { this.type = type; }
+    public RubberType getRubberType() { return rubberType; }
+    public void setRubberType(RubberType rubberType) { this.rubberType = rubberType; }
 
     public Double getHardness() { return hardness; }
     public void setHardness(Double hardness) { this.hardness = hardness; }
