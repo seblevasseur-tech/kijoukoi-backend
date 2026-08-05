@@ -29,9 +29,7 @@ public class PlayerController {
             return ResponseEntity.status(401).build();
         }
         String username = authentication.getName();
-        return playerRepository.findAll().stream()
-                .filter(p -> p.getLogin().equals(username))
-                .findFirst()
+        return playerRepository.findByLogin(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
