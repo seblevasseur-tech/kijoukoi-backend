@@ -23,14 +23,15 @@ public class Blade {
     @JoinColumn(name = "type_id")
     private BladeType bladeType;
 
-    @Column(columnDefinition = "TEXT")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
     @com.fasterxml.jackson.annotation.JsonIgnore
-    private String image;
+    private Image image;
 
     public Blade() {
     }
 
-    public Blade(String name, Brand brand, Integer weight, String image) {
+    public Blade(String name, Brand brand, Integer weight, Image image) {
         this.name = name;
         this.brand = brand;
         this.weight = weight;
@@ -53,6 +54,6 @@ public class Blade {
     public BladeType getBladeType() { return bladeType; }
     public void setBladeType(BladeType bladeType) { this.bladeType = bladeType; }
 
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+    public Image getImage() { return image; }
+    public void setImage(Image image) { this.image = image; }
 }

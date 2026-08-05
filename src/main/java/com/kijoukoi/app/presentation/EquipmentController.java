@@ -1,15 +1,11 @@
 package com.kijoukoi.app.presentation;
 
+import com.kijoukoi.app.application.EquipmentApplicationService;
 import com.kijoukoi.app.domain.Blade;
 import com.kijoukoi.app.domain.BladeType;
 import com.kijoukoi.app.domain.Brand;
 import com.kijoukoi.app.domain.Rubber;
 import com.kijoukoi.app.domain.RubberType;
-import com.kijoukoi.app.infrastructure.BladeRepository;
-import com.kijoukoi.app.infrastructure.BladeTypeRepository;
-import com.kijoukoi.app.infrastructure.BrandRepository;
-import com.kijoukoi.app.infrastructure.RubberRepository;
-import com.kijoukoi.app.infrastructure.RubberTypeRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,54 +13,41 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/equipment")
 @CrossOrigin(origins = "*")
 public class EquipmentController {
 
-    private final BladeRepository bladeRepository;
-    private final RubberRepository rubberRepository;
-    private final BrandRepository brandRepository;
-    private final BladeTypeRepository bladeTypeRepository;
-    private final RubberTypeRepository rubberTypeRepository;
+    private final EquipmentApplicationService equipmentService;
 
-    public EquipmentController(BladeRepository bladeRepository, 
-                               RubberRepository rubberRepository, 
-                               BrandRepository brandRepository,
-                               BladeTypeRepository bladeTypeRepository,
-                               RubberTypeRepository rubberTypeRepository) {
-        this.bladeRepository = bladeRepository;
-        this.rubberRepository = rubberRepository;
-        this.brandRepository = brandRepository;
-        this.bladeTypeRepository = bladeTypeRepository;
-        this.rubberTypeRepository = rubberTypeRepository;
+    public EquipmentController(EquipmentApplicationService equipmentService) {
+        this.equipmentService = equipmentService;
     }
 
     @GetMapping("/blades")
     public List<Blade> getAllBlades() {
-        return bladeRepository.findAll();
+        return equipmentService.getAllBlades();
     }
 
     @GetMapping("/rubbers")
     public List<Rubber> getAllRubbers() {
-        return rubberRepository.findAll();
+        return equipmentService.getAllRubbers();
     }
 
     @GetMapping("/brands")
     public List<Brand> getAllBrands() {
-        return brandRepository.findAll();
+        return equipmentService.getAllBrands();
     }
 
     @GetMapping("/blade-types")
     public List<BladeType> getAllBladeTypes() {
-        return bladeTypeRepository.findAll();
+        return equipmentService.getAllBladeTypes();
     }
 
     @GetMapping("/rubber-types")
     public List<RubberType> getAllRubberTypes() {
-        return rubberTypeRepository.findAll();
+        return equipmentService.getAllRubberTypes();
     }
 
     private ResponseEntity<?> parseAndReturnImage(String dataUri) {
@@ -86,19 +69,15 @@ public class EquipmentController {
 
     @GetMapping("/blades/{id}/image")
     public ResponseEntity<?> getBladeImage(@PathVariable Long id) {
-        Optional<Blade> blade = bladeRepository.findById(id);
-        if (blade.isPresent() && blade.get().getImage() != null) {
-            return parseAndReturnImage(blade.get().getImage());
-        }
-        return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
+        return equipmentService.getBladeImageDataUri(id)
+                .map(this::parseAndReturnImage)
+                .orElseGet(() -> new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/rubbers/{id}/image")
     public ResponseEntity<?> getRubberImage(@PathVariable Long id) {
-        Optional<Rubber> rubber = rubberRepository.findById(id);
-        if (rubber.isPresent() && rubber.get().getImage() != null) {
-            return parseAndReturnImage(rubber.get().getImage());
-        }
-        return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
+        return equipmentService.getRubberImageDataUri(id)
+                .map(this::parseAndReturnImage)
+                .orElseGet(() -> new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND));
     }
 }

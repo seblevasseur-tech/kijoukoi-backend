@@ -23,14 +23,15 @@ public class Rubber {
 
     private Double hardness;
 
-    @Column(columnDefinition = "TEXT")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
     @com.fasterxml.jackson.annotation.JsonIgnore
-    private String image;
+    private Image image;
 
     public Rubber() {
     }
 
-    public Rubber(String name, Brand brand, String image) {
+    public Rubber(String name, Brand brand, Image image) {
         this.name = name;
         this.brand = brand;
         this.image = image;
@@ -52,6 +53,6 @@ public class Rubber {
     public Double getHardness() { return hardness; }
     public void setHardness(Double hardness) { this.hardness = hardness; }
 
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+    public Image getImage() { return image; }
+    public void setImage(Image image) { this.image = image; }
 }

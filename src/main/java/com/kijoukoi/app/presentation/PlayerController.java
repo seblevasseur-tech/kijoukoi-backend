@@ -1,7 +1,7 @@
 package com.kijoukoi.app.presentation;
 
+import com.kijoukoi.app.application.PlayerApplicationService;
 import com.kijoukoi.app.domain.Player;
-import com.kijoukoi.app.infrastructure.PlayerRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,15 +15,15 @@ import java.util.List;
 @CrossOrigin(origins = "*") // Autoriser le frontend Angular en dev
 public class PlayerController {
 
-    private final PlayerRepository playerRepository;
+    private final PlayerApplicationService playerService;
 
-    public PlayerController(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
+    public PlayerController(PlayerApplicationService playerService) {
+        this.playerService = playerService;
     }
 
     @GetMapping
     public List<Player> getAllPlayers() {
-        return playerRepository.findAll();
+        return playerService.getAllPlayers();
     }
 
     @GetMapping("/me")
@@ -32,39 +32,28 @@ public class PlayerController {
             return ResponseEntity.status(401).build();
         }
         String username = authentication.getName();
-        return playerRepository.findByLogin(username)
+        return playerService.getPlayerByLogin(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable Long id) {
-        return playerRepository.findById(id)
+        return playerService.getPlayerById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Simplification : mise à jour complète du joueur (y compris sa raquette)
     @PutMapping("/{id}")
     public ResponseEntity<Player> updatePlayer(@PathVariable Long id, @RequestBody Player updatedPlayer) {
-        return playerRepository.findById(id).map(player -> {
-            player.setRacket(updatedPlayer.getRacket());
-            player.setLastRacketUpdateDate(java.time.LocalDateTime.now());
-            
-            // Mise à jour des tags
-            player.getTags().clear();
-            if (updatedPlayer.getTags() != null) {
-                player.getTags().addAll(updatedPlayer.getTags());
-            }
-            
-            return ResponseEntity.ok(playerRepository.save(player));
-        }).orElse(ResponseEntity.notFound().build());
+        return playerService.updatePlayer(id, updatedPlayer)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/avatar")
     public ResponseEntity<?> getPlayerAvatar(@PathVariable Long id) {
-        return playerRepository.findById(id).map(player -> {
-            String dataUri = player.getAvatar();
+        return playerService.getPlayerAvatarDataUri(id).map(dataUri -> {
             if (dataUri == null || dataUri.isEmpty()) {
                 return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
             }
@@ -79,6 +68,6 @@ public class PlayerController {
             } catch (Exception e) {
                 return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
             }
-        }).orElse(new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND));
+        }).orElseGet(() -> new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND));
     }
 }

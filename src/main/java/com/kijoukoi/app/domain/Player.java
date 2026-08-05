@@ -31,9 +31,10 @@ public class Player {
 
     private LocalDateTime lastRacketUpdateDate;
 
-    @Column(columnDefinition = "TEXT")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "avatar_id")
     @com.fasterxml.jackson.annotation.JsonIgnore
-    private String avatar;
+    private Image avatar;
 
     @Embedded
     private Racket racket;
@@ -82,8 +83,8 @@ public class Player {
     public LocalDateTime getLastRacketUpdateDate() { return lastRacketUpdateDate; }
     public void setLastRacketUpdateDate(LocalDateTime lastRacketUpdateDate) { this.lastRacketUpdateDate = lastRacketUpdateDate; }
 
-    public String getAvatar() { return avatar; }
-    public void setAvatar(String avatar) { this.avatar = avatar; }
+    public Image getAvatar() { return avatar; }
+    public void setAvatar(Image avatar) { this.avatar = avatar; }
 
     public Racket getRacket() { return racket; }
     public void setRacket(Racket racket) { this.racket = racket; }
