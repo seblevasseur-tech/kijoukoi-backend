@@ -32,6 +32,7 @@ public class Player {
     private LocalDateTime lastRacketUpdateDate;
 
     @Column(columnDefinition = "TEXT")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String avatar;
 
     @Embedded

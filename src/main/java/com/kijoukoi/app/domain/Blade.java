@@ -24,6 +24,7 @@ public class Blade {
     private BladeType bladeType;
 
     @Column(columnDefinition = "TEXT")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String image;
 
     public Blade() {

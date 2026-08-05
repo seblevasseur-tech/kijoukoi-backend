@@ -24,6 +24,7 @@ public class Rubber {
     private Double hardness;
 
     @Column(columnDefinition = "TEXT")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String image;
 
     public Rubber() {

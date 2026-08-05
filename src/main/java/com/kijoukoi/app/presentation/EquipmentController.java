@@ -10,9 +10,14 @@ import com.kijoukoi.app.infrastructure.BladeTypeRepository;
 import com.kijoukoi.app.infrastructure.BrandRepository;
 import com.kijoukoi.app.infrastructure.RubberRepository;
 import com.kijoukoi.app.infrastructure.RubberTypeRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/equipment")
@@ -60,5 +65,40 @@ public class EquipmentController {
     @GetMapping("/rubber-types")
     public List<RubberType> getAllRubberTypes() {
         return rubberTypeRepository.findAll();
+    }
+
+    private ResponseEntity<byte[]> parseAndReturnImage(String dataUri) {
+        if (dataUri == null || dataUri.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            String[] parts = dataUri.split(",");
+            String base64String = parts.length > 1 ? parts[1] : parts[0];
+            byte[] imageBytes = Base64.getDecoder().decode(base64String);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<>(imageBytes, headers, org.springframework.http.HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/blades/{id}/image")
+    public ResponseEntity<byte[]> getBladeImage(@PathVariable Long id) {
+        Optional<Blade> blade = bladeRepository.findById(id);
+        if (blade.isPresent() && blade.get().getImage() != null) {
+            return parseAndReturnImage(blade.get().getImage());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/rubbers/{id}/image")
+    public ResponseEntity<byte[]> getRubberImage(@PathVariable Long id) {
+        Optional<Rubber> rubber = rubberRepository.findById(id);
+        if (rubber.isPresent() && rubber.get().getImage() != null) {
+            return parseAndReturnImage(rubber.get().getImage());
+        }
+        return ResponseEntity.notFound().build();
     }
 }

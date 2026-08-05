@@ -3,8 +3,11 @@ package com.kijoukoi.app.presentation;
 import com.kijoukoi.app.domain.Player;
 import com.kijoukoi.app.infrastructure.PlayerRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -55,6 +58,27 @@ public class PlayerController {
             }
             
             return ResponseEntity.ok(playerRepository.save(player));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/avatar")
+    public ResponseEntity<byte[]> getPlayerAvatar(@PathVariable Long id) {
+        return playerRepository.findById(id).map(player -> {
+            String dataUri = player.getAvatar();
+            if (dataUri == null || dataUri.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            try {
+                String[] parts = dataUri.split(",");
+                String base64String = parts.length > 1 ? parts[1] : parts[0];
+                byte[] imageBytes = Base64.getDecoder().decode(base64String);
+                
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                return new ResponseEntity<>(imageBytes, headers, org.springframework.http.HttpStatus.OK);
+            } catch (Exception e) {
+                return ResponseEntity.notFound().build();
+            }
         }).orElse(ResponseEntity.notFound().build());
     }
 }
