@@ -72,7 +72,7 @@ public class AuthController {
         player.setLogin(loginRequest.login);
         player.setPassword(loginRequest.password);
         if (loginRequest.gender != null && !loginRequest.gender.isEmpty()) {
-            player.setGender(loginRequest.gender);
+            
         } else {
             player.setGender("M"); // Default
         }
