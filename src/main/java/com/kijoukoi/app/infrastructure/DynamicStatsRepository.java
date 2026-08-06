@@ -109,4 +109,36 @@ public class DynamicStatsRepository {
                 throw new IllegalArgumentException("Unsupported operator: " + op);
         }
     }
+
+
+    public List<Player> searchPlayers(AggregationRequestDTO request) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Player> query = cb.createQuery(Player.class);
+        Root<Player> root = query.from(Player.class);
+
+        query.select(root);
+
+        if (request.getFilters() != null && !request.getFilters().isEmpty()) {
+            List<Predicate> predicates = new ArrayList<>();
+            for (FilterDTO filter : request.getFilters()) {
+                Path<?> filterPath = resolvePath(root, filter.getField());
+                predicates.add(buildPredicate(cb, filterPath, filter));
+            }
+            // Optional: If we want to ensure the groupBy field is also not null (like in aggregate)
+            // But usually for search, we just apply the exact filters provided.
+            if (request.getGroupBy() != null && !request.getGroupBy().isEmpty()) {
+                 Path<?> groupPath = resolvePath(root, request.getGroupBy());
+                 predicates.add(cb.isNotNull(groupPath));
+            }
+            
+            query.where(cb.and(predicates.toArray(new Predicate[0])));
+        } else {
+             if (request.getGroupBy() != null && !request.getGroupBy().isEmpty()) {
+                 Path<?> groupPath = resolvePath(root, request.getGroupBy());
+                 query.where(cb.isNotNull(groupPath));
+            }
+        }
+
+        return entityManager.createQuery(query).getResultList();
+    }
 }
