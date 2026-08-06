@@ -13,6 +13,7 @@ import com.kijoukoi.app.infrastructure.RubberTypeRepository;
 import com.kijoukoi.app.infrastructure.DynamicEquipmentRepository;
 import com.kijoukoi.app.domain.Image;
 import com.kijoukoi.app.domain.dto.CreateBladeDTO;
+import com.kijoukoi.app.domain.dto.CreateRubberDTO;
 import com.kijoukoi.app.domain.dto.FilterDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,25 @@ public class EquipmentApplicationService {
     }
 
     
+    
+    public Rubber createRubber(CreateRubberDTO dto) {
+        Brand brand = brandRepository.findById(dto.getBrandId())
+            .orElseThrow(() -> new IllegalArgumentException("Brand not found"));
+        RubberType type = rubberTypeRepository.findById(dto.getTypeId())
+            .orElseThrow(() -> new IllegalArgumentException("RubberType not found"));
+
+        Image image = null;
+        if (dto.getImageBase64() != null && !dto.getImageBase64().isEmpty()) {
+            image = new Image();
+            image.setDataUri(dto.getImageBase64());
+        }
+
+        Rubber rubber = new Rubber(dto.getName(), brand, image);
+        rubber.setRubberType(type);
+        rubber.setHardness(dto.getHardness());
+        return rubberRepository.save(rubber);
+    }
+
     public Blade createBlade(CreateBladeDTO dto) {
         Brand brand = brandRepository.findById(dto.getBrandId())
             .orElseThrow(() -> new IllegalArgumentException("Brand not found"));

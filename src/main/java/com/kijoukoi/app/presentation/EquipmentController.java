@@ -7,6 +7,7 @@ import com.kijoukoi.app.domain.Brand;
 import com.kijoukoi.app.domain.Rubber;
 import com.kijoukoi.app.domain.RubberType;
 import com.kijoukoi.app.domain.dto.CreateBladeDTO;
+import com.kijoukoi.app.domain.dto.CreateRubberDTO;
 import com.kijoukoi.app.domain.dto.FilterDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +42,14 @@ public class EquipmentController {
     @GetMapping("/blades")
     public List<Blade> getAllBlades() {
         return equipmentService.getAllBlades();
+    }
+
+    @PostMapping("/rubbers/search")
+    
+    @PostMapping("/rubbers")
+    public ResponseEntity<Rubber> createRubber(@RequestBody CreateRubberDTO dto) {
+        Rubber rubber = equipmentService.createRubber(dto);
+        return ResponseEntity.ok(rubber);
     }
 
     @PostMapping("/rubbers/search")
