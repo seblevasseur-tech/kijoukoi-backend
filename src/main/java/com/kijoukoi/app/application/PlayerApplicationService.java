@@ -39,6 +39,12 @@ public class PlayerApplicationService {
             if (updatedPlayer.getTags() != null) {
                 player.getTags().addAll(updatedPlayer.getTags());
             }
+
+            player.setAge(updatedPlayer.getAge());
+            player.setGender(updatedPlayer.getGender());
+            player.setRanking(updatedPlayer.getRanking());
+            player.setNationality(updatedPlayer.getNationality());
+
             
             return playerRepository.save(player);
         });
