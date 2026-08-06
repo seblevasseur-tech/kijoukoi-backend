@@ -6,6 +6,7 @@ import com.kijoukoi.app.domain.BladeType;
 import com.kijoukoi.app.domain.Brand;
 import com.kijoukoi.app.domain.Rubber;
 import com.kijoukoi.app.domain.RubberType;
+import com.kijoukoi.app.domain.dto.CreateBladeDTO;
 import com.kijoukoi.app.domain.dto.FilterDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,12 @@ public class EquipmentController {
 
     public EquipmentController(EquipmentApplicationService equipmentService) {
         this.equipmentService = equipmentService;
+    }
+    
+    @PostMapping("/blades")
+    public ResponseEntity<Blade> createBlade(@RequestBody CreateBladeDTO dto) {
+        Blade blade = equipmentService.createBlade(dto);
+        return ResponseEntity.ok(blade);
     }
 
     @PostMapping("/blades/search")

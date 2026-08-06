@@ -11,6 +11,8 @@ import com.kijoukoi.app.infrastructure.BrandRepository;
 import com.kijoukoi.app.infrastructure.RubberRepository;
 import com.kijoukoi.app.infrastructure.RubberTypeRepository;
 import com.kijoukoi.app.infrastructure.DynamicEquipmentRepository;
+import com.kijoukoi.app.domain.Image;
+import com.kijoukoi.app.domain.dto.CreateBladeDTO;
 import com.kijoukoi.app.domain.dto.FilterDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,24 @@ public class EquipmentApplicationService {
         this.bladeTypeRepository = bladeTypeRepository;
         this.rubberTypeRepository = rubberTypeRepository;
         this.dynamicEquipmentRepository = dynamicEquipmentRepository;
+    }
+
+    
+    public Blade createBlade(CreateBladeDTO dto) {
+        Brand brand = brandRepository.findById(dto.getBrandId())
+            .orElseThrow(() -> new IllegalArgumentException("Brand not found"));
+        BladeType type = bladeTypeRepository.findById(dto.getTypeId())
+            .orElseThrow(() -> new IllegalArgumentException("BladeType not found"));
+
+        Image image = null;
+        if (dto.getImageBase64() != null && !dto.getImageBase64().isEmpty()) {
+            image = new Image();
+            image.setDataUri(dto.getImageBase64());
+        }
+
+        Blade blade = new Blade(dto.getName(), brand, dto.getWeight(), image);
+        blade.setBladeType(type);
+        return bladeRepository.save(blade);
     }
 
     public List<Blade> searchBlades(List<FilterDTO> filters) {
