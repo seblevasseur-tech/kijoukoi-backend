@@ -43,8 +43,6 @@ public class EquipmentController {
     public List<Blade> getAllBlades() {
         return equipmentService.getAllBlades();
     }
-
-    @PostMapping("/rubbers/search")
     
     @PostMapping("/rubbers")
     public ResponseEntity<Rubber> createRubber(@RequestBody CreateRubberDTO dto) {
