@@ -16,16 +16,31 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import com.kijoukoi.app.domain.Blade;
+import com.kijoukoi.app.domain.Rubber;
+import com.kijoukoi.app.domain.Racket;
+import com.kijoukoi.app.domain.Brand;
+import com.kijoukoi.app.infrastructure.BladeRepository;
+import com.kijoukoi.app.infrastructure.RubberRepository;
+import com.kijoukoi.app.infrastructure.BrandRepository;
+
 @Service
 @Transactional
 public class PlayerApplicationService {
 
     private final PlayerRepository playerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BladeRepository bladeRepository;
+    private final RubberRepository rubberRepository;
+    private final BrandRepository brandRepository;
 
-    public PlayerApplicationService(PlayerRepository playerRepository, PasswordEncoder passwordEncoder) {
+    public PlayerApplicationService(PlayerRepository playerRepository, PasswordEncoder passwordEncoder,
+                                    BladeRepository bladeRepository, RubberRepository rubberRepository, BrandRepository brandRepository) {
         this.playerRepository = playerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.bladeRepository = bladeRepository;
+        this.rubberRepository = rubberRepository;
+        this.brandRepository = brandRepository;
     }
 
     public List<Player> getAllPlayers() {
@@ -72,7 +87,7 @@ public class PlayerApplicationService {
 
             // Création de l'en-tête
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"Login", "Mot de passe", "Âge", "Nationalité", "Classement", "Genre (M/F/O)"};
+            String[] columns = {"Login", "Mot de passe", "Âge", "Nationalité", "Classement", "Genre (M/F/O)", "Bois", "Coup Droit", "Revers"};
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -86,6 +101,9 @@ public class PlayerApplicationService {
             exampleRow1.createCell(3).setCellValue("Française");
             exampleRow1.createCell(4).setCellValue(1500);
             exampleRow1.createCell(5).setCellValue("M");
+            exampleRow1.createCell(6).setCellValue("Viscaria");
+            exampleRow1.createCell(7).setCellValue("Tenergy 05");
+            exampleRow1.createCell(8).setCellValue("Dignics 09C");
 
             // Ligne d'exemple 2
             Row exampleRow2 = sheet.createRow(2);
@@ -95,6 +113,9 @@ public class PlayerApplicationService {
             exampleRow2.createCell(3).setCellValue("Française");
             exampleRow2.createCell(4).setCellValue(1200);
             exampleRow2.createCell(5).setCellValue("F");
+            exampleRow2.createCell(6).setCellValue("Timo Boll ALC");
+            exampleRow2.createCell(7).setCellValue("Rozena");
+            exampleRow2.createCell(8).setCellValue("Rozena");
 
             // Optionnel: largeur de colonnes par défaut
             for (int i = 0; i < columns.length; i++) {
@@ -162,6 +183,24 @@ public class PlayerApplicationService {
                     player.setGender(gender.substring(0, 1).toUpperCase());
                 }
                 
+                String bladeName = getCellValueAsString(row.getCell(6));
+                String fhName = getCellValueAsString(row.getCell(7));
+                String bhName = getCellValueAsString(row.getCell(8));
+                
+                if ((bladeName != null && !bladeName.isEmpty()) || (fhName != null && !fhName.isEmpty()) || (bhName != null && !bhName.isEmpty())) {
+                    Racket racket = new Racket();
+                    if (bladeName != null && !bladeName.isEmpty()) {
+                        racket.setBlade(bladeRepository.findByNameIgnoreCase(bladeName).orElseGet(() -> getOrCreateUnknownBlade()));
+                    }
+                    if (fhName != null && !fhName.isEmpty()) {
+                        racket.setForehandRubber(rubberRepository.findByNameIgnoreCase(fhName).orElseGet(() -> getOrCreateUnknownRubber()));
+                    }
+                    if (bhName != null && !bhName.isEmpty()) {
+                        racket.setBackhandRubber(rubberRepository.findByNameIgnoreCase(bhName).orElseGet(() -> getOrCreateUnknownRubber()));
+                    }
+                    player.setRacket(racket);
+                }
+                
                 playerRepository.save(player);
                 count++;
             }
@@ -186,5 +225,26 @@ public class PlayerApplicationService {
             default:
                 return "";
         }
+    }
+    
+    private Brand getOrCreateUnknownBrand() {
+        return brandRepository.findByNameIgnoreCase("Inconnu").orElseGet(() -> {
+            Brand brand = new Brand("Inconnu");
+            return brandRepository.save(brand);
+        });
+    }
+
+    private Blade getOrCreateUnknownBlade() {
+        return bladeRepository.findByNameIgnoreCase("Matériel introuvable").orElseGet(() -> {
+            Blade blade = new Blade("Matériel introuvable", getOrCreateUnknownBrand(), 0, null);
+            return bladeRepository.save(blade);
+        });
+    }
+
+    private Rubber getOrCreateUnknownRubber() {
+        return rubberRepository.findByNameIgnoreCase("Matériel introuvable").orElseGet(() -> {
+            Rubber rubber = new Rubber("Matériel introuvable", getOrCreateUnknownBrand(), null);
+            return rubberRepository.save(rubber);
+        });
     }
 }
