@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/players")
@@ -69,5 +71,31 @@ public class PlayerController {
                 return new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND);
             }
         }).orElseGet(() -> new ResponseEntity<>(org.springframework.http.HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/excel/template")
+    public ResponseEntity<byte[]> downloadExcelTemplate() {
+        try {
+            byte[] fileContent = playerService.generateExcelTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setContentDispositionFormData("attachment", "template_joueurs.xlsx");
+            return new ResponseEntity<>(fileContent, headers, org.springframework.http.HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/excel/upload")
+    public ResponseEntity<?> uploadExcelFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Le fichier est vide."));
+        }
+        try {
+            int count = playerService.importPlayersFromExcel(file);
+            return ResponseEntity.ok(Map.of("message", "Importation réussie. " + count + " joueurs ajoutés."));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("message", "Erreur lors de l'importation: " + e.getMessage()));
+        }
     }
 }
