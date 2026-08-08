@@ -96,9 +96,9 @@ public class PlayerApplicationService {
             exampleRow2.createCell(4).setCellValue(1200);
             exampleRow2.createCell(5).setCellValue("F");
 
-            // Ajustement automatique de la largeur des colonnes
+            // Optionnel: largeur de colonnes par défaut
             for (int i = 0; i < columns.length; i++) {
-                sheet.autoSizeColumn(i);
+                sheet.setColumnWidth(i, 5000);
             }
 
             workbook.write(out);

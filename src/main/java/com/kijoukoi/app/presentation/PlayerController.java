@@ -81,8 +81,9 @@ public class PlayerController {
             headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
             headers.setContentDispositionFormData("attachment", "template_joueurs.xlsx");
             return new ResponseEntity<>(fileContent, headers, org.springframework.http.HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(("Erreur serveur: " + e.getMessage()).getBytes());
         }
     }
 
